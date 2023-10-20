@@ -74,3 +74,4 @@ if [ "${CREATE_RELEASE}" = "true" ] || [ "${CREATE_RELEASE}" = true ]; then
 fi
 
 echo "release=${NEXT_RELEASE}" >>$GITHUB_OUTPUT
+echo "changelog=${MESSAGE}" >>$GITHUB_OUTPUT
