@@ -1,0 +1,26 @@
+name: yamllint
+
+on:
+  workflow_call:
+
+concurrency:
+  group: yamllint-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Lint yml
+        uses: bewuethr/yamllint-action@v1
+        with:
+          config-file: .github/workflows/.yamllint

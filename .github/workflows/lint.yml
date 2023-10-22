@@ -1,0 +1,21 @@
+# This workflow will lint shell scripts, yml, and dockerfiles and test calver
+name: Test
+
+on:
+  workflow_call:
+
+concurrency:
+  group: lint-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  hadolint:
+    uses: ./.github/workflows/hadolint.yml
+  shellcheck:
+    uses: ./.github/workflows/shellcheck.yml
+  yamllint:
+    uses: ./.github/workflows/yamllint.yml

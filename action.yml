@@ -1,5 +1,7 @@
+---
 name: 'Calver Release'
-description: 'Automatically create Calver compliant tags or releases based on PR labels'
+description: '>
+  Automatically create Calver compliant tags or releases based on PR labels'
 author: 'Stéphane Bour'
 
 branding:
@@ -8,41 +10,55 @@ branding:
 
 inputs:
   release_branch:
-    description: 'Branch to tag'
-    required: false
-    default: master
+    default: ${{ github.branch }}
+    description: >
+      The branch, tag or SHA to create the release and tag from. Defaults to
+      the branch, reference, or SHA for the event that triggered this workflow. 
+      Otherwise, uses the default branch.
   name:
     description: 'The title of the release'
-    required: false
     default: '0'
   message:
     description: 'The message of the release'
-    required: false
     default: '0'
   draft:
-    description: 'Is draft ?'
-    required: false
+    description: >
+      Create the release as a draft
     default: 'false'
   pre:
-    description: 'Is pre-release ?'
-    required: false
+    description: >
+      Create the release as a pre-release
     default: 'false'
   release:
-    description: 'Create new release'
-    required: false
+    description: >
+      Create a release, otherwise just get the values that would be used to 
+      create the release
     default: 'true'
   date_format:
-    description: 'Format date in posix shell'
-    required: false
+    description: >
+      Date format to use for the release and tag version
     default: '%Y.%V'
+  patch_separator:
+    description: >
+      Separator between data and patch level - "2023.10.21\${patch_separator}1"
+    default: '.'
   version_regexp:
-    description: 'Extended regexp for grep to match existing versions'
-    required: false
+    description: > 
+      "Extended regexp for to match existing versions from tags and releases, 
+      used to determine next release"
     default: '^20[^\-]*$'
 
 outputs:
+  name:
+    description: 'The title of the release'
+  message:
+    description: 'The description or changelog generated for this release'
+  draft:
+    description: 'Is draft ?'
+  pre:
+    description: 'Is pre-release ?'
   release:
-    description: 'The newly created release'
+    description: 'The newly created release string'
 
 runs:
   using: 'docker'
@@ -55,4 +71,5 @@ runs:
     - ${{ inputs.pre }}
     - ${{ inputs.release }}
     - ${{ inputs.date_format }}
+    - ${{ inputs.patch_separator }}
     - ${{ inputs.version_regexp }}

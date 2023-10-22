@@ -17,7 +17,8 @@ DRAFT="${4}"
 PRE="${5}"
 CREATE_RELEASE="${6}"
 DATE_FORMAT="${7}"
-VERSION_REGEXP="${8}"
+PATCH_SEPARATOR="${8}"
+VERSION_REGEXP="${9}"
 
 # Security
 git config --global --add safe.directory "${GITHUB_WORKSPACE}"
@@ -41,7 +42,7 @@ echo "Last major release : ${MAJOR_LAST_RELEASE}"
 
 if [ "${MAJOR_LAST_RELEASE}" = "${NEXT_RELEASE}" ]; then
   MINOR_LAST_RELEASE="$(echo "${LAST_RELEASE}" | awk -v l=$((${#NEXT_RELEASE} + 2)) '{ string=substr($0, l); print string; }')"
-  NEXT_RELEASE=${MAJOR_LAST_RELEASE}.$((MINOR_LAST_RELEASE + 1))
+  NEXT_RELEASE=${MAJOR_LAST_RELEASE}${PATCH_SEPARATOR}$((MINOR_LAST_RELEASE + 1))
   echo "Minor release"
 fi
 
@@ -63,7 +64,7 @@ if [ "${CREATE_RELEASE}" = "true" ] || [ "${CREATE_RELEASE}" = true ]; then
   JSON_STRING=$(jq -n \
     --arg tn "$NEXT_RELEASE" \
     --arg tc "$BRANCH" \
-    --arg n "$NEXT_RELEASE" \
+    --arg n "$NAME" \
     --arg b "$MESSAGE" \
     --argjson d "$DRAFT" \
     --argjson p "$PRE" \
@@ -73,4 +74,13 @@ if [ "${CREATE_RELEASE}" = "true" ] || [ "${CREATE_RELEASE}" = true ]; then
   echo "${OUTPUT}" | jq
 fi
 
-echo "release=${NEXT_RELEASE}" >>$GITHUB_OUTPUT
+{
+  echo "name=${NAME}"
+  echo "message=${MESSAGE}"
+  echo "draft=${DRAFT}"
+  echo "pre=${PRE}"
+  echo "release=${NEXT_RELEASE}"
+  echo "message<<EOF"
+  echo "${MESSAGE}"
+  echo EOF
+} >> "$GITHUB_OUTPUT"
