@@ -75,12 +75,12 @@ if [ "${CREATE_RELEASE}" = "true" ] || [ "${CREATE_RELEASE}" = true ]; then
 fi
 
 {
-  echo "name=${NAME}"
-  echo "message=${MESSAGE}"
-  echo "draft=${DRAFT}"
-  echo "pre=${PRE}"
-  echo "release=${NEXT_RELEASE}"
-  echo "message<<EOF"
-  echo "${MESSAGE}"
-  echo EOF
-} >> "$GITHUB_OUTPUT"
+  echo "release=${NEXT_RELEASE}";
+  echo "title=${NAME}";
+  echo "draft=${DRAFT}";
+  echo "pre=${PRE}";
+  echo "created=${CREATE_RELEASE}";
+  echo "changelog<<EOF";
+  echo "${MESSAGE}";
+  echo "EOF";
+} >> "${GITHUB_OUTPUT}"
