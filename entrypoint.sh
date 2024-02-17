@@ -5,7 +5,7 @@ set -u
 cd "${GITHUB_WORKSPACE}" || exit 1
 
 # Env and options
-if [ -z "${GITHUB_TOKEN}" ]; then
+if [ -z "${GITHUB_TOKEN-}" ]; then
   echo "The GITHUB_TOKEN environment variable is not defined."
   exit 1
 fi
